@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>任务发布</title>
+</head>
+<body>
+    <h1>发布新任务</h1>
+    <form id="taskForm">
+        <label for="taskname">任务名称:</label>
+        <input type="text" id="taskname" name="taskname" required><br><br>
+
+        <label for="startdate">开始时间:</label>
+        <input type="datetime-local" id="startdate" name="startdate" required><br><br>
+
+        <label for="shouldenddate">结束时间:</label>
+        <input type="datetime-local" id="shouldenddate" name="shouldenddate" required><br><br>
+
+        <label for="extracontent">任务内容:</label>
+        <textarea id="extracontent" name="extracontent" required></textarea><br><br>
+
+        <button type="submit">提交</button>
+    </form>
+
+    <p id="responseMessage"></p>
+
+    <script>
+        document.getElementById('taskForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const taskname = document.getElementById('taskname').value;
+            const startdate = document.getElementById('startdate').value;
+            const shouldenddate = document.getElementById('shouldenddate').value;
+            const extracontent = document.getElementById('extracontent').value;
+
+            const data = {
+                params: {
+                    taskname: taskname,
+                    startdate: startdate,
+                    shouldenddate: shouldenddate,
+                    extracontent: extracontent
+                }
+            };
+
+            fetch('http://192.168.203.80:8083/epoint-onm-web/rest/gxh/addld', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseMessage').textContent = data.custom.msg;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
